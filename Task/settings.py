@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xh(#7$$8(e4e$64$70*^zvvw$z)hdab=0%52lc+)8@$mm%8*$l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".cloudtype.app", "0.0.0.0"]
 CSRF_TRUSTED_ORIGINS = ['https://*.cloudtype.app']
