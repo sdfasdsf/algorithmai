@@ -84,7 +84,7 @@ TEMPLATES = [
             ],
         },
     },
-]
+] 
 
 WSGI_APPLICATION = "Task.wsgi.application"
 
