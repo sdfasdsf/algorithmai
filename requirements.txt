@@ -11,8 +11,9 @@ async-timeout
 attrs
 certifi
 charset-normalizer
-
+django-extensions
 django-restframework
+djangorestframework_simplejw
 exceptiongroup
 frozenlist
 greenlet
