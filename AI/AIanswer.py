@@ -13,13 +13,24 @@ from django.shortcuts import get_object_or_404
 from articles.models import Article
 from typing import List, Dict , Optional
 
+
 def generate_response_with_setup(query_text: str, history: Optional[List[Dict[str, str]]] = None):
     try:
         # 환경 변수에서 API 키 가져오기
-        config = dotenv_values(".env")
-        openai_api_key = config.get('OPENAI_API_KEY')
-        moviedata_token = config.get('MOVIEDATA_TOKEN')
-        os.environ["OPENAI_API_KEY"] = openai_api_key
+        openai_api_key = os.getenv('OPENAI_API_KEY')  # 환경 변수에서 API 키 가져오기
+        moviedata_token = os.getenv('MOVIEDATA_TOKEN')  # 환경 변수에서 MOVIEDATA 토큰 가져오기
+        
+        # API 키가 설정되지 않은 경우 에러 처리
+        if not openai_api_key or not moviedata_token:
+            raise ValueError("API key or token is missing")
+        
+        # API 키와 토큰을 사용하여 실제 작업 수행
+        # 예시로 OpenAI API 요청 등을 처리
+        print(f"Using OpenAI API Key: {openai_api_key}")
+        print(f"Using Movie Data Token: {moviedata_token}")
+    
+    except Exception as e:
+        print(f"Error occurred: {e}")
 
         # 모델 초기화
         model = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
