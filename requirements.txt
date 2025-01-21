@@ -41,7 +41,7 @@ requests
 requests-toolbelt
 sniffio
 SQLAlchemy
-
+Pillow
 tenacity
 typing_extensions
 tzdata
