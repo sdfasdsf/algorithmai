@@ -65,7 +65,10 @@ class signup(APIView):
                 
                 # 성공 메시지 및 리다이렉션
                 messages.success(request, '회원가입이 완료되었습니다.')
-            
+                return Response({
+                    'message': '회원가입이 완료되었습니다.',
+                    'user': user.username
+                }, status=201)  # 회원가입 성공 시 201 상태 코드 반환            
                 
             # 유효성 검사 실패 시 에러 메시지 표시
             return Response({
