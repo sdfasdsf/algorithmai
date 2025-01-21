@@ -24,6 +24,7 @@ idna
 jsonpatch
 jsonpointer
 langchain
+langchain-community
 langchain-core
 langchain-text-splitters
 langchain-openai
