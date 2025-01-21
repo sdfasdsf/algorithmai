@@ -22,7 +22,7 @@ jobs:
           stage: main
           yaml: |
             name: algorithmai
-            app: python@3.10
+            app: python@3.9
             options:
               env:
                 - name: DJANGO_SECRET
