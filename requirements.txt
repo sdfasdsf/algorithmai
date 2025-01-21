@@ -26,6 +26,7 @@ jsonpointer
 langchain
 langchain-core
 langchain-text-splitters
+langchain-openai
 langsmith
 multidict
 numpy
