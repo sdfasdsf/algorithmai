@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMOVING</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ccc;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #222;
+            padding: 10px 20px;
+            color: #fff;
+        }
+
+        header nav a {
+            color: #BFC4C3;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .main-content {
+            display: flex;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #F2F2F2;
+            padding: 20px;
+            margin-right: 20px;
+        }
+
+        .search-results {
+            flex: 1;
+            background-color: #444;
+            color: #fff;
+            padding: 20px;
+            overflow-y: auto; /* 스크롤바 추가 */
+            max-height: 80vh; /* 게시글 영역의 최대 높이 */
+        }
+
+        .search-results h2 {
+            margin: 0 0 20px;
+            display: inline-block;
+        }
+
+        .create-button {
+    float: right;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.create-button:hover {
+    background: linear-gradient(45deg, #2575fc, #6a11cb);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+        .card {
+            background-color: #555;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            position: relative;
+            height: 170px; /* 카드 높이 유지 */
+            max-width: 1500px; /* 카드의 최대 너비 제한 추가 */
+        }
+
+        .card img {
+            width: 150px;
+            height: 170px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .card .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card .content h3 {
+            margin: 0 0 20px;
+            font-size: 1.8rem; /* 제목 크기 증가 */
+        }
+
+        .card .content .rating {
+            margin-top: 60px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .card .author {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1rem;
+            color: #ddd;
+        }
+
+        .card .timestamp {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            font-size: 0.9rem;
+            color: #BFC4C3;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #BFC4C3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>TMOVING</div>
+        <nav>
+            <!-- Add navigation links if needed -->
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <aside class="sidebar">
+            <form>
+                <h3>영화 검색</h3>
+                <input type="text" placeholder="Enter movie title here">
+                <select>
+                    <option>장르 선택</option>
+                </select>
+                <select>
+                    <option>별점 선택</option>
+                </select>
+                <button>Search</button>
+            </form>
+            <div class="genres">
+                <h3>장르</h3>
+                <label><input type="checkbox"> 공포</label><br>
+                <label><input type="checkbox"> 코미디</label><br>
+                <label><input type="checkbox"> 액션</label><br>
+                <label><input type="checkbox"> 공상 과학</label><br>
+                <label><input type="checkbox"> 드라마</label>
+            </div>
+        </aside>
+
+        <section class="search-results">
+            <h2>리뷰 목록</h2>
+            <a href="{% url 'articles:article_create' %}" class="create-button">리뷰 작성</a>
+            <div id="articles">
+                <!-- JavaScript로 데이터를 추가합니다 -->
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div>TMOVING &copy; Team Sparta</div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("http://127.0.0.1:8000/articles/api/") // API URL
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById("articles");
+                    container.innerHTML = ""; // 기존 내용 초기화
+    
+                    data.forEach(article => {
+                        // 카드 생성
+                        const cardHTML = `
+                            <div class="card" data-id="${article.id}">
+                                <img src="${article.image}" alt="${article.title}">
+                                <div class="author">작성자: ${article.author}</div>
+                                <div class="content">
+                                    <h3>${article.Article_title}</h3>
+                                    <div class="rating">⭐ ${article.rating}점</div>
+                                </div>
+                                <div class="timestamp">${new Date(article.created_at).toLocaleString()}</div>
+                            </div>
+                        `;
+                        container.innerHTML += cardHTML;
+                    });
+    
+                    // 카드 클릭 이벤트 추가
+                    const cards = document.querySelectorAll(".card");
+                    cards.forEach(card => {
+                        card.addEventListener("click", function () {
+                            const articleId = card.getAttribute("data-id");
+                            window.location.href = `/articles/${articleId}/`; // 상세 페이지로 이동
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching articles:", error);
+                });
+        });
+    </script>
+</body>
+</html>

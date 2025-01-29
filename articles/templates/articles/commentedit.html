@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            background-color: #212121;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        select,
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            background-color: #3a3a3a;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        textarea {
+            height: 200px;
+            /* 기본 높이 설정 */
+            resize: vertical;
+            /* 세로 방향으로 크기 조절 가능 */
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px; /* 버튼 간격 추가 */
+        }
+
+        .button {
+            cursor: pointer;
+            padding: 12px 25px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            /* 그림자 효과 */
+        }
+
+        .button.save {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .button.save:hover {
+            background-color: #218838;
+            /* 호버 시 색상 변경 */
+            transform: translateY(-2px);
+            /* 약간 위로 이동 */
+        }
+
+        .button.discard {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .button.discard:hover {
+            background-color: #c82333;
+            /* 호버 시 색상 변경 */
+            transform: translateY(-2px);
+            /* 약간 위로 이동 */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>댓글 수정</h1>
+        <form id="editArticleForm" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+            {% csrf_token %}
+            <label for="content">내용</label>
+            <textarea id="content" name="content" placeholder="댓글을 작성하세요" required></textarea>
+
+            <div class="buttons">
+                <button type="button" class="button discard" onclick="window.location.href='/articles/'">취소</button>
+                <button type="submit" class="button save">저장</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 막기
+
+            const form = document.getElementById("editArticleForm");
+            if (!form) {
+                console.error("폼을 찾을 수 없습니다.");
+                alert("폼을 찾을 수 없습니다.");
+                return;
+            }
+
+            const formData = new FormData(form); // 폼 데이터 생성
+            const currentPath = window.location.pathname;
+            const articleId = currentPath.split("/")[2];
+            const commentId = currentPath.split("/")[4];
+
+            fetch(`/articles/${articleId}/comments/${commentId}/edit/api/`, {
+                method: "Put", // 수정 요청은 PATCH 사용
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("서버 응답이 실패했습니다.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert("댓글이 성공적으로 수정되었습니다!");
+                    window.location.href = `/articles/${articleId}/`; // 상세 페이지로 리다이렉트
+                })
+                .catch(error => {
+                    console.error("Error updating article:", error);
+                    alert("댓글 수정 중 문제가 발생했습니다.");
+                });
+        }
+    </script>
+</body>
+
+</html>

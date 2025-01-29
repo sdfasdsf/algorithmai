@@ -74,8 +74,8 @@ ROOT_URLCONF = 'Task.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # 프로젝트의 템플릿 디렉토리
+        'APP_DIRS': True,  # 앱 내부의 templates 폴더를 자동 탐지
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -136,6 +136,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # 정적 파일 디렉토리 지정
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -152,7 +155,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',  
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT 인증
+        'rest_framework.authentication.SessionAuthentication',        # 세션 인증
     ),
 }
 
@@ -162,7 +166,23 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'BLACKLIST_AFTER_ROTATION': True,  # 토큰 회전 후 블랙리스트에 추가
+
+    'AUTH_COOKIE': 'access_token',                # 쿠키 이름
+    'AUTH_COOKIE_DOMAIN': None,                   # 쿠키가 유효한 도메인 (기본값: None)
+    'AUTH_COOKIE_SECURE': False,                  # HTTPS만 허용 (개발 환경: False)
+    'AUTH_COOKIE_HTTP_ONLY': True,                # JavaScript에서 쿠키 접근 방지
+    'AUTH_COOKIE_PATH': '/',                      # 쿠키 경로
+    'AUTH_COOKIE_SAMESITE': 'Lax',                # SameSite 설정 ('Strict', 'Lax', 'None')
+
+    # 리프레시 토큰 회전 설정
+    'ROTATE_REFRESH_TOKENS': True,                # 리프레시 시 새로운 리프레시 토큰 발급
+    'BLACKLIST_AFTER_ROTATION': True,             # 기존 리프레시 토큰 블랙리스트 추가
+
+    # JWT 인증 헤더 형식
+    'AUTH_HEADER_TYPES': ('Bearer',),    
 }
+
+
 
 
 # 미디어 파일 설정

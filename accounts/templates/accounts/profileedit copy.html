@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>프로필 수정</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f4f4f4;
+      border-bottom: 1px solid #ccc;
+    }
+    header button {
+      margin: 0 5px;
+    }
+    main {
+      padding: 20px;
+    }
+  </style>
+</head>
+  <body>
+    <header>
+      <div>
+        <a href="/"><button>메인</button></a>
+        <span>시간</span>
+      </div>
+      <div>
+        <button id="save-profile-btn">저장</button>
+        <button id="logout-btn">로그아웃</button>
+      </div>
+    </header>
+    <main>
+      <h1>프로필 수정</h1>
+      <form id="profile-form">
+        <label for="username">닉네임:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="profile_image">프로필 이미지:</label>
+        <input type="file" id="profile_image" name="profile_image"><br><br>
+      </form>
+    </main>
+
+    <script>
+      // 페이지 로딩 시 프로필 정보 가져오기
+      window.onload = function() {
+        fetchProfile();
+      };
+
+      // 프로필 정보 GET 요청
+      function fetchProfile() {
+        const token = localStorage.getItem('access_token');  // JWT 토큰을 로컬스토리지에서 가져옴
+        
+
+
+        fetch('/accounts/profile/', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token  // Authorization 헤더에 Bearer 토큰 추가
+          }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to fetch profile data");
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById('username').value = data.username;
+          // 프로필 이미지 설정
+        })
+        .catch(error => console.error('Error fetching profile:', error));
+      }
+
+      // 프로필 수정 저장 버튼 클릭 시
+      document.getElementById('save-profile-btn').onclick = function() {
+        // 프로필 수정 처리 로직
+      };
+
+      // 로그아웃 버튼 클릭 시
+      document.getElementById('logout-btn').onclick = function() {
+        // 로그아웃 처리 (토큰 삭제 등)
+        localStorage.removeItem('access_token');
+        window.location.href = '/';  // 로그아웃 후 메인 페이지로 이동
+      };
+    </script>
+  </body>
+</html>
