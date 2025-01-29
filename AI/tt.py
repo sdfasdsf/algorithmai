@@ -179,9 +179,11 @@ import requests
 import json
 from AIanswer import load_movies_from_file
 import time
+import os
 
 # API 정보
-API_KEY = '528be68f87cd17fbb63cd610049e189b'  # 자신의 API 키 입력
+API_KEY = os.getenv('MOVIEDATA_API_KEY')
+#API_KEY = '528be68f87cd17fbb63cd610049e189b'  # 자신의 API 키 입력
 BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json'
 
 movies = load_movies_from_file("movies.json")
