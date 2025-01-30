@@ -88,10 +88,3 @@ class Follow(models.Model):
 
     def __str__(self):
         return f"{self.follower} follows {self.following}"
-class UserProfile(models.Model):
-    username = models.CharField(max_length=255)
-    email = models.EmailField()
-    token = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.username

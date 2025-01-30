@@ -1,159 +1,151 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>프로필 수정</title>
     <style>
-        /* 전체 페이지 스타일 */
         body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #ffffff;
             margin: 0;
             padding: 0;
-            height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background-color: #121212;
-            font-family: Arial, sans-serif;
+            align-items: center;
+            height: 100vh;
         }
 
-        /* 프로필 수정 컨테이너 스타일 */
-        .profile-edit-container {
-            width: 500px;  /* 컨테이너 너비 설정 */
-            padding: 30px;
-            background-color: #2e2e2e;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        /* 제목 스타일 */
-        .profile-edit-container h2 {
-            color: #d8d8d8;
-            font-weight: normal;
-            margin-bottom: 30px;
-        }
-
-        /* 입력 필드 스타일 */
-        .profile-edit-container input[type="text"], 
-        .profile-edit-container input[type="email"], 
-        .profile-edit-container input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
+        .container {
+            width: 400px;
+            padding: 20px;
             background-color: #212121;
-            color: #d8d8d8;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
 
-        /* 프로필 수정 버튼 스타일 */
-        .profile-edit-container button {
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="file"] {
             width: 100%;
             padding: 10px;
-            background-color: #6e00ff;
-            color: #ffffff;
+            background-color: #3a3a3a;
             border: none;
+            border-radius: 4px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button {
             cursor: pointer;
-            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
-        /* footer 스타일 (필요시) */
-        .profile-edit-container .footer {
-            margin-top: 20px;
+        .save {
+            background-color: #28a745;
+            color: #fff;
         }
 
-        .profile-edit-container .footer a {
-            color: #6e00ff;
-            text-decoration: none;
-            margin: 0 10px;
+        .save:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
         }
 
+        .cancel {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .cancel:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
+
 <body>
-    <div class="profile-edit-container">
-        <h2>프로필 수정</h2>
-        <form id="profile-edit-form" enctype="multipart/form-data">
-            <!-- 사용자 이름 -->
-            <div>
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" placeholder="Username" value="{{ user.username }}">
+    <div class="container">
+        <h1>프로필 수정</h1>
+        <form id="profileEditForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="username">사용자명</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="profile_image">프로필 이미지</label>
+            <input type="file" id="profile_image" name="profile_image" accept="image/*">
+
+            <div class="buttons">
+                <button type="button" class="button cancel" onclick="window.location.href='/accounts/profile/'">취소</button>
+                <button type="submit" class="button save">저장</button>
             </div>
-
-            <!-- 이메일 주소 -->
-            <div>
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" placeholder="Email" value="{{ user.email }}">
-            </div>
-
-            <!-- 프로필 이미지 -->
-            <div>
-                <label for="profile_image">Profile Image</label>
-                <input type="file" name="profile_image" id="profile_image">
-            </div>
-
-            <!-- 결과 메시지 -->
-            <div id="result"></div>
-
-            <button type="submit">프로필 수정</button>
         </form>
-
-        <div class="footer">
-            <a href="/accounts/profile/">프로필 보기</a>
-        </div>
     </div>
+
     <script>
-        // 쿠키에서 특정 값 가져오는 함수
-        function getCookie(name) {
-            const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-            return match ? match[2] : null;
-        }
-
-        // 쿠키 값 출력
-        const cookieValue = getCookie('yourCookieName');  // 쿠키 이름을 실제 사용하려는 값으로 바꾸세요.
-        const cookieResultDiv = document.getElementById('cookie-result');
-        cookieResultDiv.textContent = `쿠키 값: ${cookieValue}`;  // 쿠키 값 표시
-        console.log('Cookie Value:', cookieValue);
-
-        // 프로필 수정 폼 제출 처리
-        const form = document.getElementById('profile-edit-form');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // FormData 생성
-            const formData = new FormData(form);
-            
-            // 쿠키에서 access_token 가져오기
-            const accessToken = getCookie('access_token'); 
-
-            if (!accessToken) {
-                alert('로그인이 필요합니다!');
-                return;
-            }
-
-            try {
-                // API 호출 시 Authorization 헤더에 토큰 포함
-                const response = await fetch('/accounts/profileedit/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                    body: formData
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/accounts/profileedit/api/")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("username").value = data.username;
+                    document.getElementById("email").value = data.email;
+                })
+                .catch(error => {
+                    console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
+                    alert("프로필 정보를 가져오지 못했습니다.");
                 });
+        });
 
-        // 프로필 수정 후 profile.html로 이동
-        if (response.ok) {
-            window.location.href = '/accounts/profile/'; // 수정된 정보를 URL에 쿼리 파라미터 없이 이동
-        } else {
-            // 응답이 실패 상태인 경우 경고
-            alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
-        }
+        document.getElementById("profileEditForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
 
-    } catch (error) {
-        console.error('서버와의 통신 오류:', error);
-        alert("서버와의 통신에 문제가 발생했습니다.");
-    }
-});
+            fetch("/accounts/profileedit/api/", {
+                method: "PATCH",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("프로필이 성공적으로 수정되었습니다!");
+                window.location.href = "/accounts/profile/";
+            })
+            .catch(error => {
+                console.error("프로필 수정 중 오류 발생:", error);
+                alert("프로필 수정 중 문제가 발생했습니다.");
+            });
+        });
     </script>
 </body>
+
 </html>

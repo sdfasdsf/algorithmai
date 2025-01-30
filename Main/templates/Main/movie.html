@@ -186,7 +186,7 @@
                 method: 'GET',
                 headers: {
                     accept: 'application/json',
-                    Authorization: `Bearer ${CONFIG.API_KEY}` // config.js에서 API 키 사용
+                    Authorization: `Bearer ${MOVIEDATA_TOKEN}` // config.js에서 API 키 사용
                 }
             })
                 .then(response => response.json())
