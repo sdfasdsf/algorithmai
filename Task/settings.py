@@ -16,7 +16,7 @@ LANGSMITH_API_KEY = os.getenv('LANGSMITH_API_KEY')
 MOVIEDATA_API_KEY = os.getenv('MOVIEDATA_API_KEY')
 MOVIEDATA_TOKEN = os.getenv('MOVIEDATA_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-the_Film_Council_API_KEY = os.getenv('the_Film_Council_API_KEY')
+The_Film_Council_API_KEY = os.getenv('The_Film_Council_API_KEY')
 
 
 import os
