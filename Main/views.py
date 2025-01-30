@@ -27,6 +27,7 @@ def config_js(request):
         the_Film_Council_API_KEY: "{the_film_council_api_key}",
     }};
     """
+    
 
     # JavaScript 파일로 반환
     response = HttpResponse(config_js_content, content_type='application/javascript')
@@ -39,7 +40,7 @@ class Main(APIView):
 
     permission_classes = [AllowAny]  # 인증이 필요하지 않음
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'Main/home.html'
+    template_name = 'Main/Home.html'
     throttle_classes = [AnonRateThrottle]  # Rate limiting 적용
 
     def get(self,request):

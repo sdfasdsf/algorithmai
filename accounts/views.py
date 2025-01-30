@@ -140,7 +140,7 @@ class Login(APIView):
 
             # 쿠키에 토큰 저장
             response = TemplateResponse(
-                request, 'Main/home.html', {'user': request.user})
+                request, 'Main/Home.html', {'user': request.user})
             response.set_cookie('access_token', access_token, httponly=True)
             response.set_cookie('refresh_token', refresh_token, httponly=True)
             return response
