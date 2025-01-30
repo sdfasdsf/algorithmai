@@ -129,7 +129,8 @@
 </section>
 
 <!-- config.js 로드 -->
-<script src="{% static 'config.js' %}"></script>
+<script src="{% url 'config_js' %}"></script>
+
 <script>
     // API 호출
     fetch('https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&region=KR&page=1', {
