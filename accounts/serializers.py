@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from .models import Follow, UserProfile
 from articles.models import Article, Comment
 from AI.models import AI
-
+from django.core.exceptions import ValidationError
 User = get_user_model()
 
 
@@ -21,6 +21,12 @@ class SignupSerializer(serializers.ModelSerializer):
             "password2",
             "username",
         )
+           
+    def validate_email(self, value):
+        """이메일 중복 체크"""
+        if User.objects.filter(email=value).exists():
+            raise ValidationError("이미 사용 중인 이메일 주소입니다.")
+        return value
 
     def validate(self, data):
         if data["password"] != data["password2"]:
