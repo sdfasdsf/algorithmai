@@ -167,7 +167,7 @@
             const formData = new FormData();
             formData.append("user_question", userMessage);
 
-            fetch("http://127.0.0.1:8000/AI/TMOVINGBOT/api/", { // DRF API 주소
+            fetch("https://port-0-algorithmai-m5z9pc7n629e94e3.sel4.cloudtype.app/AI/TMOVINGBOT/api/", { // DRF API 주소
                 method: "POST",
                 headers: {
                     'X-CSRFToken': csrftoken
