@@ -176,42 +176,55 @@
     <div id="movie-container" class="movie-info">
         <!-- 영화 정보가 여기에 동적으로 추가됩니다 -->
     </div>
-    <script src="{% url 'config_js' %}"></script>
+    <script>
+        const MOVIEDATA_TOKEN = "{{ MOVIEDATA_TOKEN|default:''|escapejs }}";
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const currentPath = window.location.pathname;
-            const movieId = currentPath.split("/")[2]; // 영화 ID 추출
+    const urlParts = window.location.pathname.split("/");
+    const movieId = urlParts[urlParts.length - 2]; // 마지막 '/' 앞의 값이 영화 ID
+    console.log("Extracted Movie ID:", movieId); // 영화 ID 확인
 
-            fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=ko-KR`, {
-                method: 'GET',
-                headers: {
-                    accept: 'application/json',
-                    Authorization: `Bearer ${MOVIEDATA_TOKEN}` // config.js에서 API 키 사용
-                }
-            })
-                .then(response => response.json())
-                .then(movie => {
-                    const container = document.getElementById("movie-container");
+    if (!movieId || isNaN(movieId)) {
+        console.error("Invalid Movie ID:", movieId);
+        return;
+    }
 
-                    const movieHTML = `
-                        <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-                        <div class="details">
-                            <div class="title">${movie.title}</div>
-                            <div class="meta">
-                                <div class="rating">평점: ⭐ ${movie.vote_average}</div>
-                                <div class="release-date">개봉일: ${movie.release_date}</div>
-                            </div>
-                            <div class="content">${movie.overview}</div>
-                        </div>
-                    `;
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=ko-KR`, {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${MOVIEDATA_TOKEN}`
+        }
+    })
+        .then(response => response.json())
+        .then(movie => {
+            if (!movie || movie.success === false) {
+                console.error("Invalid movie data:", movie);
+                return;
+            }
 
-                    container.innerHTML = movieHTML;
-                })
-                .catch(error => {
-                    console.error("Error fetching movie details:", error);
-                });
+            const container = document.getElementById("movie-container");
+
+            const movieHTML = `
+                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                <div class="details">
+                    <div class="title">${movie.title}</div>
+                    <div class="meta">
+                        <div class="rating">평점: ⭐ ${movie.vote_average}</div>
+                        <div class="release-date">개봉일: ${movie.release_date}</div>
+                    </div>
+                    <div class="content">${movie.overview}</div>
+                </div>
+            `;
+
+            container.innerHTML = movieHTML;
+        })
+        .catch(error => {
+            console.error("Error fetching movie details:", error);
         });
+});
     </script>
 {% endblock %}
 

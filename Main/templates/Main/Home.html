@@ -129,8 +129,8 @@
 </section>
 
 <!-- config.js 로드 -->
-<script>const MOVIEDATA_TOKEN = "{{ MOVIEDATA_TOKEN }}";
-    const THE_FILM_COUNCIL_API_KEY = "{{ THE_FILM_COUNCIL_API_KEY }}";</script>
+<script>const MOVIEDATA_TOKEN = "{{ MOVIEDATA_TOKEN|default:''|escapejs }}";
+    const THE_FILM_COUNCIL_API_KEY = "{{ THE_FILM_COUNCIL_API_KEY|default:''|escapejs }}";</script>
 
 <script>
     // API 호출
@@ -234,7 +234,7 @@
     };
 
     // KOFIC 박스오피스 API 호출
-    fetch(`https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${the_Film_Council_API_KEY }&targetDt=${getYesterdayDate()}`)
+    fetch(`https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${THE_FILM_COUNCIL_API_KEY }&targetDt=${getYesterdayDate()}`)
         .then(response => response.json())
         .then(async data => {
             const movies = data.boxOfficeResult.dailyBoxOfficeList;
