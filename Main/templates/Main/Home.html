@@ -129,7 +129,8 @@
 </section>
 
 <!-- config.js 로드 -->
-<script src="{% url 'config_js' %}"></script>
+<script>const MOVIEDATA_TOKEN = "{{ MOVIEDATA_TOKEN }}";
+    const THE_FILM_COUNCIL_API_KEY = "{{ THE_FILM_COUNCIL_API_KEY }}";</script>
 
 <script>
     // API 호출

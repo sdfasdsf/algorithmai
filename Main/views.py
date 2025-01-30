@@ -42,15 +42,18 @@ def config_js(request):
 
 
 class Main(APIView):
-
     permission_classes = [AllowAny]  # 인증이 필요하지 않음
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'Main/Home.html'
+    template_name = 'Main/home.html'
     throttle_classes = [AnonRateThrottle]  # Rate limiting 적용
 
-    def get(self,request):
-        '''리뷰 목록 폼'''
-        return Response({'message': '리뷰 목록 페이지입니다.'})
+    def get(self, request):
+        '''홈 페이지 렌더링'''
+        context = {
+            "MOVIEDATA_TOKEN": os.getenv("MOVIEDATA_TOKEN", ""),
+            "THE_FILM_COUNCIL_API_KEY": os.getenv("THE_FILM_COUNCIL_API_KEY", "")
+        }
+        return Response(context)
     
 class Movie(APIView):
 
