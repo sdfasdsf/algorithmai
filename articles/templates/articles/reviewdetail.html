@@ -307,7 +307,7 @@
             const currentPath = window.location.pathname;
             const articlePk = currentPath.split("/")[2];
     
-            fetch(`http://127.0.0.1:8000/articles/${articlePk}/api/`)
+            fetch(`/articles/${articlePk}/api/`)
                 .then((response) => response.json())
                 .then((article) => {
                     const container = document.getElementById("movie-container");
@@ -416,7 +416,7 @@
 
             console.log("Extracted article_pk:", articlePk);
 
-            fetch(`http://127.0.0.1:8000/articles/${articlePk}/api/`) // API URL
+            fetch(`/articles/${articlePk}/api/`) // API URL
                 .then((response) => response.json())
                 .then((article) => {
                     const container = document.getElementById("movie-container");
