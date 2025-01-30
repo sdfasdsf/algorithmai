@@ -1,11 +1,12 @@
 import json
 import requests
+from dotenv import dotenv_values
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
-import os
-def data_receive():
 
-    moviedata_token = os.getenv('MOVIEDATA_TOKEN')
+def data_receive():
+    config = dotenv_values(".env")
+    moviedata_token = config.get('MOVIEDATA_TOKEN')
 
     # API URL 및 카테고리 설정
     categories = {

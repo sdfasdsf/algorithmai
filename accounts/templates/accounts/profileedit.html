@@ -71,9 +71,9 @@
     </style>
 </head>
 <body>
-    <div class="profile-edit-container">
-        <h2>프로필 수정</h2>
-        
+    <div id="profile-edit-container">
+        <h1>프로필 수정</h1>
+
         <form id="profile-edit-form">
             <div>
                 <label for="username">Username</label>
@@ -87,6 +87,9 @@
                 <label for="profile_image">Profile Image</label>
                 <input type="file" name="profile_image" id="profile_image">
             </div>
+            <div id="result"></div>  <!-- Content-Type 출력 -->
+            <div id="cookie-result">여기에 쿠키 값이 표시됩니다.</div>  <!-- 쿠키 값 출력 -->
+
             <button type="submit">프로필 수정</button>
         </form>
     </div>
@@ -100,6 +103,8 @@
 
         // 쿠키 값 출력
         const cookieValue = getCookie('yourCookieName');  // 쿠키 이름을 실제 사용하려는 값으로 바꾸세요.
+        const cookieResultDiv = document.getElementById('cookie-result');
+        cookieResultDiv.textContent = `쿠키 값: ${cookieValue}`;  // 쿠키 값 표시
         console.log('Cookie Value:', cookieValue);
 
         // 프로필 수정 폼 제출 처리
@@ -128,19 +133,19 @@
                     body: formData
                 });
 
-                // 프로필 수정 후 profile.html로 이동
-                if (response.ok) {
-                    window.location.href = '/accounts/profile/'; // 수정된 정보를 URL에 쿼리 파라미터 없이 이동
-                } else {
-                    // 응답이 실패 상태인 경우 경고
-                    alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
-                }
+        // 프로필 수정 후 profile.html로 이동
+        if (response.ok) {
+            window.location.href = '/accounts/profile/'; // 수정된 정보를 URL에 쿼리 파라미터 없이 이동
+        } else {
+            // 응답이 실패 상태인 경우 경고
+            alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
+        }
 
-            } catch (error) {
-                console.error('서버와의 통신 오류:', error);
-                alert("서버와의 통신에 문제가 발생했습니다.");
-            }
-        });
+    } catch (error) {
+        console.error('서버와의 통신 오류:', error);
+        alert("서버와의 통신에 문제가 발생했습니다.");
+    }
+});
     </script>
 </body>
 </html>

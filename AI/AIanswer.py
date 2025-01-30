@@ -66,7 +66,9 @@ def generate_response_with_setup(query_text: str, history: Optional[List[Dict[st
     today = datetime.now().strftime("%Y-%m-%d")
     try:
         # 환경 변수에서 API 키 가져오기
-        OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+        config = dotenv_values(".env")
+        openai_api_key = config.get('OPENAI_API_KEY')
+        os.environ["OPENAI_API_KEY"] = openai_api_key
 
         # 모델 초기화
         model = ChatOpenAI(model="gpt-4o", temperature=0)
