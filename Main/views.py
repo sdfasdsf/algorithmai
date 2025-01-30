@@ -29,7 +29,7 @@ def config_js(request):
         MOVIEDATA_API_KEY: "{moviedata_api_key}",
         MOVIEDATA_TOKEN: "{moviedata_token}",
         OPENAI_API_KEY: "{openai_api_key}",
-        the_Film_Council_API_KEY: "{the_film_council_api_key}",
+        THE_FILM_COUNCIL_API_KEY: "{the_film_council_api_key}",
     }};
     """
     
