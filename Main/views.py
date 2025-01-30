@@ -44,7 +44,7 @@ def config_js(request):
 class Main(APIView):
     permission_classes = [AllowAny]  # 인증이 필요하지 않음
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'Main/home.html'
+    template_name = 'Main/Home.html'
     throttle_classes = [AnonRateThrottle]  # Rate limiting 적용
 
     def get(self, request):
