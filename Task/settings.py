@@ -11,7 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
 import os
-
+# 외부 API 키들
+LANGSMITH_API_KEY = os.getenv('LANGSMITH_API_KEY')
+MOVIEDATA_API_KEY = os.getenv('MOVIEDATA_API_KEY')
+MOVIEDATA_TOKEN = os.getenv('MOVIEDATA_TOKEN')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+the_Film_Council_API_KEY = os.getenv('the_Film_Council_API_KEY')
 
 # .env 파일 불러오기
 
@@ -93,18 +98,14 @@ WSGI_APPLICATION = "Task.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        'LANGSMITH_API_KEY': os.getenv('LANGSMITH_API_KEY'),
-        'MOVIEDATA_API_KEY': os.getenv('MOVIEDATA_API_KEY'),
-        'MOVIEDATA_TOKEN': os.getenv('MOVIEDATA_TOKEN'),
-        'OPENAI_API_KEY': os.getenv('OPENAI_API_KEY'),
-        'the_Film_Council_API_KEY': os.getenv('the_Film_Council_API_KEY'),
+ 
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

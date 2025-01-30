@@ -9,7 +9,7 @@ from dotenv import dotenv_values
 from langchain.schema import Document
 from typing import List, Dict , Optional
 from datetime import datetime, timedelta
-
+from django.conf import settings
 
 # JSON 파일에서 데이터를 로드하는 함수
 def load_movies_from_file(filepath: str) -> List[Dict]:
@@ -66,9 +66,7 @@ def generate_response_with_setup(query_text: str, history: Optional[List[Dict[st
     today = datetime.now().strftime("%Y-%m-%d")
     try:
         # 환경 변수에서 API 키 가져오기
-        config = dotenv_values(".env")
-        openai_api_key = config.get('OPENAI_API_KEY')
-        os.environ["OPENAI_API_KEY"] = openai_api_key
+        openai_api_key = settings.OPENAI_API_KEY
 
         # 모델 초기화
         model = ChatOpenAI(model="gpt-4o", temperature=0)

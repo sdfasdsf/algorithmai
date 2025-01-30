@@ -1,13 +1,13 @@
 import json
 import requests
 from dotenv import dotenv_values
-import time
+import time, os
 from apscheduler.schedulers.background import BackgroundScheduler
-
+from django.conf import settings
 def data_receive():
-    config = dotenv_values(".env")
-    moviedata_token = config.get('MOVIEDATA_TOKEN')
-
+    
+    moviedata_token = settings.MOVIEDATA_TOKEN
+    
     # API URL 및 카테고리 설정
     categories = {
         "popular": "https://api.themoviedb.org/3/movie/popular?language=ko-KR&region=KR",
