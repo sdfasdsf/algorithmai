@@ -252,7 +252,8 @@
     };
 
     // KOFIC 박스오피스 API 호출
-        fetch(`https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${THE_FILM_COUNCIL_API_KEY}&targetDt=${getYesterdayDate()}`)
+       // KOFIC API 호출
+    fetch(`https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${THE_FILM_COUNCIL_API_KEY}&targetDt=${getYesterdayDate()}`)
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -260,15 +261,14 @@
         return response.json();
     })
     .then(data => {
-        console.log("📌 KOFIC API 응답 데이터:", data); // 응답 데이터 확인
+        console.log("📌 KOFIC API 응답 데이터:", data);
 
-    // 응답 데이터 구조 확인
         if (!data || !data.boxOfficeResult) {
             throw new Error("📌 `boxOfficeResult` 필드가 응답에 없습니다.");
         }
 
         if (!data.boxOfficeResult.dailyBoxOfficeList) {
-        throw new Error("📌 `dailyBoxOfficeList` 필드가 응답에 없습니다.");
+            throw new Error("📌 `dailyBoxOfficeList` 필드가 응답에 없습니다.");
         }
 
         const movies = data.boxOfficeResult.dailyBoxOfficeList;
@@ -277,24 +277,46 @@
         const container = document.getElementById('box-office-movies');
         container.innerHTML = ''; // 기존 내용을 초기화
 
+        // 각 영화에 대해 TMDB에서 포스터 이미지를 가져옵니다.
         movies.forEach(movie => {
             const movieName = movie.movieNm;
 
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.setAttribute('data-id', movie.id || ''); // 영화 ID를 data-id 속성에 추가
-            card.innerHTML = `
-                <h3>${movieName}</h3>
-                <p>순위: ${movie.rank}</p>
-                <p>누적 관객수: ${movie.audiAcc}</p>
-                <p>개봉일: ${movie.openDt}</p>
-            `;
-            container.appendChild(card);
+            // TMDB API에서 영화 정보 검색
+            fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(movieName)}&language=ko-KR`, {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${MOVIEDATA_TOKEN}` // TMDB API 키 사용
+                }
+            })
+            .then(response => response.json())
+            .then(tmdbData => {
+                const tmdbMovie = tmdbData.results[0]; // 첫 번째 영화 정보 가져오기
+                const posterPath = tmdbMovie ? tmdbMovie.poster_path : null;
+                const posterUrl = posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : 'default-poster.jpg'; // 기본 이미지 URL 사용
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('data-id', movie.id || ''); // 영화 ID를 data-id 속성에 추가
+
+                card.innerHTML = `
+                    <img src="${posterUrl}" alt="${movieName}" />
+                    <h3>${movieName}</h3>
+                    <p>순위: ${movie.rank}</p>
+                    <p>누적 관객수: ${movie.audiAcc}</p>
+                    <p>개봉일: ${movie.openDt}</p>
+                `;
+                container.appendChild(card);
+            })
+            .catch(error => {
+                console.error("🚨 TMDB API Error:", error);
+            });
         });
     })
     .catch(error => {
         console.error("🚨 KOFIC API Error:", error);
     });
+
 
     // 박스오피스 카드 클릭 이벤트 추가
     document.addEventListener('DOMContentLoaded', () => {
@@ -309,7 +331,7 @@
                     window.location.href = `/movie/${movieId}/`;
                 }
             }
-        });
+        }); 
     });
 
 </script>
