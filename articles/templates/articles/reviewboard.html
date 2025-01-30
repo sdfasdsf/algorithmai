@@ -352,8 +352,8 @@
             // 게시글 데이터를 가져오는 함수
             function fetchArticles(genre = null) {
                 const url = genre
-                    ? `/articles/api/?genre=${genre}`
-                    : `/articles/api/`;
+                    ? `http://127.0.0.1:8000/articles/api/?genre=${genre}`
+                    : `http://127.0.0.1:8000/articles/api/`;
 
                 fetch(url)
                     .then(response => {
