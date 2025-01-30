@@ -16,6 +16,8 @@ def config_js(request):
     moviedata_token = os.getenv('MOVIEDATA_TOKEN')
     openai_api_key = os.getenv('OPENAI_API_KEY')
     the_film_council_api_key = os.getenv('the_Film_Council_API_KEY')
+       # MOVIEDATA_TOKEN이 제대로 로드되었는지 확인
+    print(f"MOVIEDATA_TOKEN: {moviedata_token}")  # 여기에서 값 출력 확인
 
     # JavaScript로 출력할 config.js 내용 작성
     config_js_content = f"""
