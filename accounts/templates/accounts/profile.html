@@ -135,12 +135,13 @@
 </head>
 <body>
     <h1>{{ profile_data.username }}의 프로필</h1>
+    
     <header>
         <div>
             <a href="/"><button>메인</button></a>
             <span id="current-time"></span>
         </div>
-        <div>
+        <div class="profile-actions">
             <button id="edit-profile-btn" onclick="window.location.href='/accounts/profileedit/'">프로필 수정</button>
             <button id="change-password-btn" onclick="window.location.href='/accounts/profile/passwordchange/'">비밀번호 변경</button>
             <button id="logout-btn" onclick="logout()">로그아웃</button>
@@ -151,116 +152,86 @@
         <div class="profile-header">
             <img src="{{ profile_data.profile_image }}" alt="프로필 사진" id="profile-image">
             <div>
-                <p id="user-name">{{ profile_data.username }}</p>
-                <p id="user-email">{{ profile_data.email }}</p>
+                <p id="user-name">닉네임: {{ profile_data.username }} </p>
+                <p id="user-email">이메일: {{ profile_data.email }}</p>
             </div>
         </div>
 
-        <!-- 팔로워/팔로잉 정보 -->
-        <div class="user-follow">
-            <h3>팔로워</h3>
-            <ul>
-                {% for follower in profile_data.followers %}
-                    <li>{{ follower.username }}</li>
-                {% empty %}
-                    <p>팔로워가 없습니다.</p>
-                {% endfor %}
-            </ul>
-            <p><strong>팔로워 수:</strong> {{ profile_data.follower_count }}</p>
+        <div class="container">
+            <!-- 왼쪽 섹션 (댓글, 게시글 등) -->
+            <div class="left-section">
+                <div class="user-follow">
+                    <h3>팔로워/팔로잉</h3>
+                    <p><strong>팔로워 수:</strong> {{ profile_data.follower_count }} | <strong>팔로잉 수:</strong> {{ profile_data.following_count }}</p>
 
-            <h3>팔로잉</h3>
-            <ul>
-                {% for following in profile_data.followings %}
-                    <li>{{ following.username }}</li>
-                {% empty %}
-                    <p>팔로잉이 없습니다.</p>
-                {% endfor %}
-            </ul>
-            <p><strong>팔로잉 수:</strong> {{ profile_data.following_count }}</p>
-        </div>
+                    <h3>좋아요한 게시글</h3>
+                    <ul>
+                        {% for article in profile_data.Favorite_articles %}
+                            <li>
+                                <a href="/articles/{{ article.id }}/">
+                                    <strong>{{ article.Article_title }}</strong>: {{ article.movie_title }} (작성자: {{ article.author_username }})
+                                </a>
+                            </li>
+                        {% empty %}
+                            <p>좋아요한 게시글이 없습니다.</p>
+                        {% endfor %}
+                    </ul>
 
-        <!-- 좋아요한 게시글 섹션 -->
-        <div class="user-posts">
-            <h3>좋아요한 게시글</h3>
-            <ul id="post-list">
-                {% for article in profile_data.Favorite_articles %}
-                    <li>
-                           <a href="/articles/{{ article.id }}/">
-                            <strong>{{ article.Article_title }}</strong>: {{ article.movie_title }} (작성자: {{ article.author_username }})
-                        </a>
-                    </li>
-                {% empty %}
-                    <p>좋아요한 게시글이 없습니다.</p>
-                {% endfor %}
-            </ul>
-            <p><strong>좋아요한 게시글 수:</strong> {{ profile_data.Favorite_articles_count }}</p>
-        </div>
+                    <h3>좋아요한 댓글</h3>
+                    <ul>
+                        {% for comment in profile_data.Favorite_comments %}
+                            <li>
+                                <a href="/articles/{{ comment.article.id }}/#comments">
+                                    <strong>{{ comment.Article_title }}</strong>: {{ comment.content }} (작성자: {{ comment.author_username }})
+                                </a>
+                            </li>
+                        {% empty %}
+                            <p>좋아요한 댓글이 없습니다.</p>
+                        {% endfor %}
+                    </ul>
 
-        <!-- 좋아요한 댓글 섹션 -->
-        <div class="user-comments">
-            <h3>좋아요한 댓글</h3>
-            <ul id="comment-list">
-                {% for comment in profile_data.Favorite_comments %}
-                    <li>
-                        <!-- 좋아요한 댓글이 달린 게시글로 이동 -->
-                        <a href="/articles/{{ comment.article.id }}/#comments">
-                            <strong>{{ comment.Article_title }}</strong>: {{ comment.content }} (작성자: {{ comment.author_username }})
-                        </a>
-                    </li>
-                {% empty %}
-                    <p>좋아요한 댓글이 없습니다.</p>
-                {% endfor %}
-            </ul>
-            <p><strong>좋아요한 댓글 수:</strong> {{ profile_data.Favorite_comments_count }}</p>
-        </div>
+                    <h3>작성한 댓글</h3>
+                    <ul>
+                        {% for comment in profile_data.written_comments %}
+                            <li>
+                                <a href="/articles/{{ article.id }}/">
+                                    <strong>{{ comment.Article_title }}</strong>: {{ comment.content }} (작성자: {{ comment.author_username }})
+                                </a>
+                            </li>
+                        {% empty %}
+                            <p>작성한 댓글이 없습니다.</p>
+                        {% endfor %}
+                    </ul>
 
-        <!-- AI 대화 기록 섹션 -->
-        <div class="user-ai-conversations">
-            <h3>AI와 나눈 대화</h3>
-            <ul id="ai-conversation-list">
-                {% for conversation in profile_data.bot_Conversation_List %}
-                    <li>
-                        <strong>질문:</strong> {{ conversation.user_question }} <br>
-                        <strong>답변:</strong> {{ conversation.bot_response }}
-                    </li>
-                {% empty %}
-                    <p>AI와의 대화가 없습니다.</p>
-                {% endfor %}
-            </ul>
-        </div>
-<!-- 작성한 댓글 섹션 -->
-<div class="user-comments">
-    <h3>작성한 댓글</h3>
-    <ul id="comment-list">
-        {% for comment in profile_data.written_comments %}
-            <li>
-                <!-- 작성한 댓글이 달린 게시글로 이동 -->
-                <a href="/articles/{{ article.id }}/">
-                    <strong>{{ comment.Article_title }}</strong>: {{ comment.content }} (작성자: {{ comment.author_username }})
-                </a>
-            </li>
-        {% empty %}
-            <p>작성한 댓글이 없습니다.</p>
-        {% endfor %}
-    </ul>
-    <p><strong>작성한 댓글 수:</strong> {{ profile_data.written_comments_count }}</p>
-</div>
+                    <h3>작성한 게시글</h3>
+                    <ul>
+                        {% for article in profile_data.written_articles %}
+                            <li>
+                                <a href="/articles/{{ article.id }}/">
+                                    <strong>{{ article.Article_title }}</strong>: {{ article.movie_title }} (작성자: {{ article.author_username }})
+                                </a>
+                            </li>
+                        {% empty %}
+                            <p>작성한 게시글이 없습니다.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
 
-        <!-- 작성한 게시글 섹션 -->
-        <div class="user-posts">
-            <h3>작성한 게시글</h3>
-            <ul id="post-list">
-                {% for article in profile_data.written_articles %}
-                    <li>
-                        <a href="/articles/{{ article.id }}/">
-                            <strong>{{ article.Article_title }}</strong>: {{ article.movie_title }} (작성자: {{ article.author_username }})
-                        </a>
-                    </li>
-                {% empty %}
-                    <p>작성한 게시글이 없습니다.</p>
-                {% endfor %}
-            </ul>
-            <p><strong>작성한 게시글 수:</strong> {{ profile_data.written_articles_count }}</p>
+            <!-- 오른쪽 섹션 (AI 대화 기록) -->
+            <div class="right-section">
+                <h3>AI와 나눈 대화</h3>
+                <ul>
+                    {% for conversation in profile_data.bot_Conversation_List %}
+                        <li>
+                            <strong>질문:</strong> {{ conversation.user_question }} <br>
+                            <strong>답변:</strong> {{ conversation.bot_response }}
+                        </li>
+                    {% empty %}
+                        <p>AI와의 대화가 없습니다.</p>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </main>
 
@@ -268,7 +239,7 @@
         // 로그아웃 함수
         function logout() {
             localStorage.removeItem('token');  // 로컬 스토리지에서 토큰 제거
-            window.location.href = '/accounts/login/';  // 로그인 페이지로 리다이렉트
+            window.location.href = '/login/';  // 로그인 페이지로 리다이렉트
         }
 
         // 현재 시간 표시
